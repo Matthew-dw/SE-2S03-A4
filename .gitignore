@@ -2,3 +2,6 @@
 
 *.out
 *.ppm
+*.o
+
+evolve

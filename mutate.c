@@ -4,12 +4,13 @@
 
 #define data(row, col) data[row * width + col]
 
-int mutateColor(int curr, int max_color){
+static int mutate_color(int curr, int max_color){
     curr += (rand() % 100 - 50);
     if (curr > max_color) curr -= max_color;
     if (curr < 0) curr += max_color;
     return curr;
 }
+
 void mutate(Individual *individual, double rate){
     PPM_IMAGE image = individual->image;
     PIXEL *data = image.data;
@@ -22,9 +23,9 @@ void mutate(Individual *individual, double rate){
         int row = rand() % height + 1;
         int col = rand() % width + 1;
 
-        data(row, col).r = mutateColor(data(row, col).r, max_color);
-        data(row, col).g = mutateColor(data(row, col).g, max_color);
-        data(row, col).b = mutateColor(data(row, col).b, max_color);
+        data(row, col).r = mutate_color(data(row, col).r, max_color);
+        data(row, col).g = mutate_color(data(row, col).g, max_color);
+        data(row, col).b = mutate_color(data(row, col).b, max_color);
     }
 }
 

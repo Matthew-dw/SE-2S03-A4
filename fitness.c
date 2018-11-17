@@ -10,7 +10,7 @@ double comp_distance(const PIXEL *A, const PIXEL *B, int image_size) {
            + pow(A[i].b - B[i].b, 2);
     }
 
-    return d;
+    return sqrt(d);
 }
 
 void comp_fitness_population(const PIXEL *image, Individual *individual, int population_size) {

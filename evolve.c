@@ -25,6 +25,7 @@ PPM_IMAGE *evolve_image(const PPM_IMAGE *image, int num_generations, int populat
         comp_fitness_population(image->data, population, population_size);
         qsort(population, population_size, sizeof(*population), comparator);
     }
+    return &population[0].image;
 }
 
 void free_image(PPM_IMAGE *p) { free(p->data), free(p); }

@@ -6,11 +6,11 @@ OBJS = main.o readwriteppm.o fitness.o population.o evolve.o \
 	crossover.o mutate.o
 
 $(PROGRAM_NAME): $(OBJS)
-	$(CC) -o $@ $? -lm
+	$(CC) -o $@ $? -lm -pthread
 
 escher:
 	make; make
-	./evolve me.ppm me2.ppm 50000 24 3e-2
+	./evolve me.ppm me2.ppm 10000 1600 3e-2
 mcmaster: 	
 	make; make
 	./evolve mcmaster.ppm mcmaster2.ppm 10000 500 3e-2

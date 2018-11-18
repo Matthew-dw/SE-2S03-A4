@@ -19,7 +19,7 @@ PPM_IMAGE *read_ppm(const char *file_name);
 void write_ppm(const char *file_name, const PPM_IMAGE *image);
 
 // Random image and population
-PIXEL *generate_random_image(int width, int height, int max_color);
+PIXEL *generate_random_image(int width, int height, int max_color, unsigned int seed);
 Individual *generate_population(int population_size, int width, int height, int max_color);
 
 // Fitness

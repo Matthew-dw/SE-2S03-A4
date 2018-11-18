@@ -20,8 +20,8 @@ void mutate(Individual *individual, double rate){
     int n = width * height, pixToChange = (int)(rate/100*n);
     
     for (int i = 0;i < pixToChange;i++){
-        int row = rand() % height + 1;
-        int col = rand() % width + 1;
+        int row = rand() % height;
+        int col = rand() % width;
 
         data(row, col).r = mutate_color(data(row, col).r, max_color);
         data(row, col).g = mutate_color(data(row, col).g, max_color);
@@ -32,7 +32,7 @@ void mutate(Individual *individual, double rate){
 void mutate_population(Individual *individual, int population_size, double rate){
     //Only mutating from pop/4 to pop-1
     int i = (int)population_size/4;
-    for (i;i < population_size;i++){
+    for (i; i < population_size;i++){
         mutate(individual + i, rate);
     }
 }

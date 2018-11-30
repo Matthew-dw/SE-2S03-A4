@@ -21,13 +21,10 @@ Individual *generate_population(int population_size, int width, int height, int 
     Individual *population = malloc(sizeof(Individual) * population_size);
 
     for (int i = 0; i < population_size; i++) {
-        PPM_IMAGE *image = malloc(sizeof(PPM_IMAGE));
-        image->width = width;
-        image->height = height;
-        image->max_color = max_color;
-        image->data = generate_random_image(width, height, max_color);
-
-        population[i].image = *image;
+        population[i].image.width = width;
+        population[i].image.height = height;
+        population[i].image.max_color = max_color;
+        population[i].image.data = generate_random_image(width, height, max_color);
         population[i].fitness = 0.0;
     }
 

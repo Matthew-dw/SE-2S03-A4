@@ -14,8 +14,9 @@ double comp_distance(const PIXEL *A, const PIXEL *B, int image_size) {
 }
 
 void comp_fitness_population(const PIXEL *image, Individual *individual, int population_size) {
+    // Assuming all images are the same size
+    int image_size = individual[0].image.width * individual[0].image.height; 
     for (int i = 0; i < population_size; i++) {
-        int image_size = individual[i].image.width * individual[i].image.height; 
         individual[i].fitness = comp_distance(image, individual[i].image.data, image_size);
     }
 }

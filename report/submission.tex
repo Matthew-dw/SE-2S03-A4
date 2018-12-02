@@ -1,0 +1,118 @@
+\documentclass{article}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage[letterpaper, total={6in, 9in}]{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{multicol}
+\usepackage{placeins}
+\captionsetup{justification=raggedright,singlelinecheck=false}
+
+\definecolor{gray}{rgb}{0.3,0.3,0.3}
+
+\lstset{
+	basicstyle=\ttfamily\small,
+	language=C,
+	numberstyle=\color{gray},
+	commentstyle=\itshape\color{gray},
+	keywordstyle=\bfseries
+}
+
+\begin{document}
+
+\title{SFWRENG 2S03 Assignment 4} 
+\author{Caleb Mech and Matthew Williams}
+\date{30 November 2018}
+
+\maketitle
+
+\section*{Code}
+
+\subsection*{readwriteppm.c}
+\lstinputlisting{../readwriteppm.c}
+\subsection*{fitness.c}
+\lstinputlisting{../fitness.c}
+\subsection*{population.c}
+\lstinputlisting{../population.c}
+\subsection*{evolve.c}
+\lstinputlisting{../evolve.c}
+\subsection*{mutate.c}
+\lstinputlisting{../mutate.c}
+\newpage
+
+\section*{Output Images}
+
+
+
+\vspace{5mm}
+
+
+\includegraphics[scale=0.7]{me2.png}
+\captionof*{figure}{\texttt{> make escher}}
+\vspace{8mm}
+\includegraphics[scale=0.6]{mcmaster2.png}
+\captionof*{figure}{\texttt{> make mcmaster}}
+\vspace{8mm}
+\includegraphics[scale=0.7]{../me2.png}
+\captionof*{figure}{This image was produced using 1.5 million generations with population size 160 and rate 4e-2. It took approximately 6 hours to run using multithreaded versions of \texttt{comp\_fitness\_population} and \texttt{generate\_population}.}
+\newpage
+\section*{Valgrind Output}
+\begin{verbatim}
+caleb:SE-2S03-A4$ valgrind ./evolve me.ppm me2.ppm 10 24 3e-2
+==954== Memcheck, a memory error detector
+==954== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==954== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==954== Command: ./evolve me.ppm me2.ppm 10 24 3e-2
+==954==
+==954== error calling PR_SET_PTRACER, vgdb might block
+==954==
+==954== HEAP SUMMARY:
+==954==     in use at exit: 0 bytes in 0 blocks
+==954==   total heap usage: 53 allocs, 53 frees, 4,202,488 bytes allocated
+==954==
+==954== All heap blocks were freed -- no leaks are possible
+==954==
+==954== For counts of detected and suppressed errors, rerun with: -v
+==954== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+\end{verbatim}
+
+\section*{gprof Optimization}
+\begin{verbatim}
+[mechc2@moore ~/SE-2S03-A4-master] gprof ./evolve
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total
+ time   seconds   seconds    calls   s/call   s/call  name
+ 88.34      5.49     5.49    24000     0.00     0.00  comp_distance
+ 11.28      6.20     0.70     5994     0.00     0.00  recombine
+  0.48      6.23     0.03       24     0.00     0.00  generate_random_image
+  0.00      6.23     0.00    17982     0.00     0.00  mutate
+  0.00      6.23     0.00     1000     0.00     0.01  comp_fitness_population
+  0.00      6.23     0.00      999     0.00     0.00  crossover
+  0.00      6.23     0.00      999     0.00     0.00  mutate_population
+  0.00      6.23     0.00        2     0.00     0.00  free_image
+  0.00      6.23     0.00        1     0.00     6.23  evolve_image
+  0.00      6.23     0.00        1     0.00     0.03  generate_population
+  0.00      6.23     0.00        1     0.00     0.00  read_ppm
+  0.00      6.23     0.00        1     0.00     0.00  write_ppm
+
+[...]
+\end{verbatim}
+
+The gprof output of our evolve program showed that the most time consuming process was computing distance for the fitness values. This makes sense when considering every pixel of the image requires a distance calculation. To improve the performance of this function we could use multithreading so that the calculations may be performed in parallel. We would spawn threads at the level of \texttt{comp\_fitness\_population} by splitting up the population into subpopulations. This would benefit performance specifically over multithreading at the \texttt{comp\_fitness} level because it only requires threads to be spawned once a generation. We decided to implement multithreading for experimentation and the gprof results showed that the function used a lower percentage of the runtime. Furthermore this trend continued with an increase population size.
+
+Another potential method to gain performance would be to use a single instead of double to store the fitness values. This would cause the mathematical operations in \texttt{comp\_fitness} to be performed quicker with potentially negligable effect on the precision of the algorithm. 
+
+
+\section*{Visualizing Image Evolution}
+\textsl{The submitted video should be playable in VLC and is also available at youtu.be/R7ZCM8FoQk0}\vspace{1mm}
+
+As the image evolves the rate of change decreases. For the first 5,000-7,500 generations a lot of change can be seen. However the closer the evolved image gets to its goal, the slower the rate of change becomes. Once 10,000 or more generations have been simulated only a few pixels will be seen changing. After being plotted on a graph a trendline can mostly easily be made using the logarithm function.
+
+\begin{center}
+	\vspace{4mm} \includegraphics[scale=0.75]{graph.png} 
+\end{center}
+
+\end{document}
